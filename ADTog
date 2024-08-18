@@ -1,0 +1,169 @@
+* Q1.  Consider College Database.*/
+use College
+db.createCollection("Faculty");
+db.createCollection("Students");
+db.createCollection("Administration");
+db.createCollection("Accounts");
+db.createCollection("NonTeaching");
+
+/* A) Insert 5 records in all collections Faculty, Students, Administration, Accounts, Non teaching Staff.*/
+db.Faculty.insertMany([{Tid:101,Tname:'Prof.Chaitrali',mobno:9922324343},{Tid:102,Tname:'Mr. Joshi',mobno:9923121212},{Tid: 103,Tname:'Mr. Patil',mobno:7878557787},{Tid:104,Tname:'Prof. Shubhangi',mobno:9229223434},{Tid : 104, Tname:'Mrs. Kaushik',mobno:9922655566}]);
+db.Students.insertMany([{sid:101,sname:'Megha',phoneno:9922334455},{sid:102,sname:'Tejashree',phoneno:9922334455},{sid:103,sname:'Deepa',phoneno:9912345678},{sid:104,sname:'Devansh',phoneno:9229228787},{sid:105,sname:'Durvesh',phoneno:9339334567}]);
+// Like this insert into all tables 
+
+
+/* B) Display all the records .*/
+
+db.Faculty.find({});
+db.Students.find({});
+//Like this display all tables
+
+
+/* C) Change the phone number of student having id 101.*/
+
+db.Students.updateOne({sid:101},{$set:{phoneno:9422369381}});
+// Check the records if updated or not
+db.Students.find({sid:101});
+
+/* D) Delete the record from faculty collection where faculty name is “Mr. Joshi”.*/
+
+// See all the faculty records
+db.Faculty.find({});
+db.Faculty.remove({Tname:"Mr. Joshi"});
+// This has removed the record for faculty Mr. Joshi
+// Check the Faculty Collection again
+db.Faculty.find({});
+
+/*=================================================================================================*/
+
+
+// Q2. Consider Medicalshop database.
+use Medicalshop
+db.createCollection("Items");
+db.createCollection("Orders");
+db.createCollection("Sales");
+
+//  A) ) Insert two record in all collections like  Items, Orders, and Sales.
+
+db.Items.insertMany([{Itemno:1,Itemname:'Moov',price:50},{Itemno:2,Itemname:'Iodex',price:50}]);
+db.Orders.insertMany([{Orderid:101,date:'31/05/2024',itemno:1,quantity:5},{Orderid:102,date:'01/06/2024',itemno:2,quantity:10}]);
+db.Sales.insertMany([{Orderid:101,delieverycost:50,delieverytime:'2:05'},{Orderid:102,delieverycost:100,delieverytime:'12:00'}]);
+// Display all inserted records
+db.Items.find({});
+db.Orders.find({});
+db.Sales.find({});
+
+// B) Display the orders dated ’31-05-2024’.
+
+db.Orders.find({date:'31/05/2024'});
+
+// C)Change the price to 100 Rs. to items having price 50
+//Check the price of all items:
+
+db.Items.find({});
+// Update the price
+db.Items.updateMany({price:50},{$set:{price:100}},{multi:true});
+// Check the Items collection again
+db.Items.find({});
+
+//D) Delete all record from Sales
+// First check the Sales collection
+db.Sales.find({});
+// Now remove all the records
+db.Sales.remove({});
+// Check the Sales collection again
+db.Sales.find({});
+//============================================================================
+
+// Consider Bank Database
+
+use Bank
+db.createCollection("Customers");
+db.createCollection("Branch");
+db.createCollection("Account");
+
+// A)	Insert two records into all the collections like Customers, Branches and Accounts.
+
+db.Customers.insertMany([{cregno:1,cname:'Chaitrali',address:'Shivajinagar'},{cregno:2,cname:'Anushka',address:'Sinhagad Road'}]);
+db.Branch.insertMany([{branchid:1,branchname:'J.M.Road',location:'J.M.Road'},{branchid:2,branchname:'Bibwewadi',location:'Upper Indira Nagar'}]);
+db.Account.insertMany([{accountno:55221122,cregno:1,branch:'Shivajinagar'},{accountno:54542323,cregno:102,branch:'Swargate'}]);
+// Check whether records are inserted using db.find() method
+
+// B) Display all customers from shivajinagar and J.M Road
+db.Customers.find({"address":{"$in":['Shivajinagar','J.M.Road']}});
+
+// C)	Update account number to 50754532 of customer id=1.
+
+db.Account.update({cregno:1},{$set:{accountno:50754532}});
+// Check whether the record updated or not using find method
+db.Account.find({});
+
+// D)	Delete Branch having name ‘J.M.Road’.
+db.Branch.remove({branchname:'J.M.Road'});
+// Check whether branch is removed using find method
+db.Branch.find({});
+
+//================================================================================
+
+// Consider database Railwayreservation
+
+use Railwayreservation
+db.createCollection("Passanger");
+db.createCollection("Train");
+db.createCollection("Booking");
+
+//A)	Insert four records into all the collections like Passenger, Train and Booking.
+db.Passanger.insertMany([{pid:100,pname:'Subhash',email:'sb@gmail.com'},{pid:101,pname:'Durva',email:'durva@gmail.com'},{pid:102,pname:'Gauri',email:'gaurik@gmail.com'},{pid:103,pname:'Ganesh',email:'ganesh@gmail.com'}]);
+db.Train.insertMany([{tid:1,tname:'Deccan Express',departuretime:'12:05'},{tid:2,tname:'Sinhagad Express',departuretime:'2:30'},{tid:3,tname:'Indrayani Express',departuretime:'4:30'},{tid:4,tname:'Duranto',departuretime:'5:30'}]);
+db.Booking.insertMany([{bid:1,pid:100,status:'Booked'},{bid:2,pid:101,status:'Incomplete'},{bid:3,pid:102,status:'Booked'},{bid:4,pid:103,status:'Booked'}]);
+
+//B) Display departure time of train ‘Deccan Express’.
+
+db.Train.find({tname:'Deccan Express'},{tid:0,tname:0});
+// here tid and tname are exculded in result
+
+//C)	Update status of booking to Cancel for Passenger id: 100 and 102.
+// Check all the records of collection Booking
+db.Booking.find({});
+// Now update
+db.Booking.updateMany({"pid":{"$in":[100,102]}},{$set:{status:'Cancel'}});
+// This will update the status where pid is 101 and 102
+// Check Booking collection whether booking is updated or not
+db.Booking.find({});
+
+//D)	Delete details of Passenger named ‘Subhash’.
+// Check all the records from Passanger collection using find method and reomve afterwords
+db.Passanger.remove({pname:'Subhash'});
+// Check again Passanger record for subhash has deleted or not
+db.Passanger.find({});
+//================================================================================
+
+// Consider E-Commrece System 
+use E-Commerce
+db.createCollection("Product");
+db.createCollection("Customers");
+db.createCollection("Transaction");
+db.createCollection("Cart");
+
+// A)	Insert four records into all the collections like  Product, Customer, Transaction, Cart.
+
+db.Product.insertMany([{pid:1,pname:'Toothpaste',price:200},{pid:2,pname:'Laptop',price:50000},{pid:3,pname:'Smartphone',price:50000},{pid:4,pname:'Milk',price:50}]);
+db.Customers.insertMany([{cid:1,cname:'Vidya'},{cid:2,cname:'Mangala'},{cid:3,cname:'Prasad'},{cid:4,cname:'Sharad'}]);
+db.Transaction.insertMany([{cid:1,pid:1,quantity:2,price:800},{cid:2,pid:2,quantity:1,price:50000},{cid:3,pid:3,quantity:1,price:50000},{cid:4,pid:4,quantity:2,price:100}]);
+db.Cart.insertMany([{cid:1,pid:1},{cid:2,pid:2},{cid:3,pid:3},{cid:4,pid:4}]);
+// Check whether successfully inserted or not using find method
+
+// B)	Display products having price is greater than or equal to 50000
+
+db.Product.find({"price":{"$gte":50000}});
+
+// C)	Update the price for all products while transaction which have price is greater than to 40000.
+
+db.Transaction.updateMany({"price":{"$gt":40000}},{$set:{price:30000}});
+// Check whether price is updated or not using find query.
+
+// D)	Delete the cart of customer id :4
+// Check the cart collection then remove
+db.Cart.remove({cid:1});
+// Check the cart collection again if cart of cid:1 is removed or not with find command
+
