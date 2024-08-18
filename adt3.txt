@@ -1,0 +1,74 @@
+
+test> use college
+switched to db college
+college> db.createUser({user:"collegead",pwd:"Admin",roles:[]})
+{ ok: 1 }
+college> db.createRole({role:"Admin",privileges:[{resource:{db:'college',collection:" "},actions:['find','insert','update','remove']}],roles:[]})
+{ ok: 1 }
+college> db.createCollection("faculty")
+{ ok: 1 }
+college> db.Faculty.insertMany([{Tid:101,Tname:'Prof.Chaitrali',mobno:9922324343},{Tid:102,Tname:'Mr. Joshi',mobno:9923121212},{Tid: 103,Tname:'Mr. Patil',mobno:7878557787},{Tid:104,Tname:'Prof. Shubhangi',mobno:9229223434},{Tid : 104, Tname:'Mrs. Kaushik',mobno:9922655566}]);
+
+
+college> db.createCollection("student")
+{ ok: 1 }
+college> db.Students.insertMany([{sid:101,sname:'Megha',phoneno:9922334455},{sid:102,sname:'Tejashree',phoneno:9922334455},{sid:103,sname:'Deepa',phoneno:9912345678},{sid:104,sname:'Devansh',phoneno:9229228787},{sid:105,sname:'Durvesh',phoneno:9339334567}]);
+
+college> db.Administration.insertMany([{adid:101,adname:'neha',phoneno:9922335455},{adid:102,adname:'shree',phoneno:99247834455},{adid:103,sname:'Deepika',phoneno:9812345678},{adid:104,adname:'Divya',phoneno:9225428787},{adid:105,adname:'Durgesh',phoneno:9338334567}]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('66c20ce969e29570e8228fbf'),
+    '1': ObjectId('66c20ce969e29570e8228fc0'),
+    '2': ObjectId('66c20ce969e29570e8228fc1'),
+    '3': ObjectId('66c20ce969e29570e8228fc2'),
+    '4': ObjectId('66c20ce969e29570e8228fc3')
+  }
+}
+college> db.Students.updateOne({sid:101},{$set:{phoneno:9422369381}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+college> db.Students.find({sid:101});
+[
+  {
+    _id: ObjectId('66c20b7069e29570e8228fba'),
+    sid: 101,
+    sname: 'Megha',
+    phoneno: 9422369381
+  }
+]
+college> db.Faculty.remove({Tname:"Mr. Joshi"});
+DeprecationWarning: Collection.remove() is deprecated. Use deleteOne, deleteMany, findOneAndDelete, or bulkWrite.
+{ acknowledged: true, deletedCount: 1 }
+college> db.Faculty.find({});
+[
+  {
+    _id: ObjectId('66c20aea69e29570e8228fb5'),
+    Tid: 101,
+    Tname: 'Prof.Chaitrali',
+    mobno: 9922324343
+  },
+  {
+    _id: ObjectId('66c20aea69e29570e8228fb7'),
+    Tid: 103,
+    Tname: 'Mr. Patil',
+    mobno: 7878557787
+  },
+  {
+    _id: ObjectId('66c20aea69e29570e8228fb8'),
+    Tid: 104,
+    Tname: 'Prof. Shubhangi',
+    mobno: 9229223434
+  },
+  {
+    _id: ObjectId('66c20aea69e29570e8228fb9'),
+    Tid: 104,
+    Tname: 'Mrs. Kaushik',
+    mobno: 9922655566
+  }
+]
