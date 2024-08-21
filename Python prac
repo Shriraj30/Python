@@ -1,0 +1,35 @@
+lst = [-1, 0, 1, 0, -1, -4]
+
+count = 0
+for i in range(len(lst) - 2):
+    if lst[i] + lst[i+1] + lst[i+2] == 0:
+        count += 1
+        print(f"{count}) {lst[i]} + {lst[i+1]} + {lst[i+2]} = 0")
+
+if count == 0:
+    print("No such sequences found.")
+else:
+    print(f"There exist {count} such sequences.")
+
+
+
+
+def sum_digits_until_single_digit(n):
+    while n > 9:  # Continue until n is a single digit
+        n = sum(int(digit) for digit in str(n))  # Sum of digits
+    return n
+
+# Accepting numbers from the user
+numbers = []
+while True:
+    number = input("Enter a number (or type 'done' to finish): ")
+    if number.lower() == 'done':
+        break
+    numbers.append(int(number))
+
+# Creating the second list with the sum of digits until single digit
+single_digit_sums = [sum_digits_until_single_digit(num) for num in numbers]
+
+# Output the lists
+print(f"list1 = {numbers}")
+print(f"list2 = {single_digit_sums}")
