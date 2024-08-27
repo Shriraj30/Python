@@ -1,27 +1,50 @@
-list1 = []
-num = int(input("Enter how many numbers: "))
-
-for i in range(num):
-    print(f"Enter {i + 1}th number:")
-    n = int(input())
-    list1.append(n)
-
+list1=[]
 def addDigit(n):
-    while n > 9: 
-        sum = 0
-        while n > 0:
-            rem = n % 10
-            sum += rem
-            n = n // 10
-        n = sum
-    return n
 
-def additionList(list1):
-    list2 = []
-    for i in range(len(list1)):
-        n = addDigit(list1[i])
+    while n > 9:
+
+        sum = 0
+
+        while n > 0:
+
+            rem = n % 10
+
+            sum += rem
+
+            n = n // 10
+
+        n = sum
+
+    return n
+def additionList(list1):      
+    list2=[]
+    for i in list1:
+        n=addDigit(i)
         list2.append(n)
     return list2
+ch=input("do you want to add the no in list(y/n) ")
+ch=ch.lower()
 
-print(f"list1 = {list1}")
-print(f"list2 = {additionList(list1)}")
+while ch=="y":
+
+    a=int(input("enter the number "))
+
+    list1.append(a)
+
+    ch=input("do you want to add the no in list(y/n) ")
+
+    ch=ch.lower()
+
+
+
+if len(list1)==0:
+
+    print("there is no elements in list")
+
+else:
+
+    print(additionList(list1))
+
+
+
+
