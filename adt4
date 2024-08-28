@@ -1,0 +1,117 @@
+Q!:
+use HospitalManagement
+db.createCollection("Doctors")
+db.Doctors.insertMany([
+  { "_id": 1, "name": "Dr. John Doe", "specialization": "Cardiology", "opd_charges": 150, "salary": 5000, "category": "OPD" },
+  { "_id": 2, "name": "Dr. Jane Smith", "specialization": "Neurology", "opd_charges": 200, "salary": 5500, "category": "IPD" },
+  { "_id": 3, "name": "Dr. Emily Johnson", "specialization": "Orthopedics", "opd_charges": 90, "salary": 4000, "category": "OPD" },
+  { "_id": 4, "name": "Dr. Michael Brown", "specialization": "Dermatology", "opd_charges": 120, "salary": 4500, "category": "OPD" },
+  { "_id": 5, "name": "Dr. William Davis", "specialization": "Gastroenterology", "opd_charges": 160, "salary": 6000, "category": "IPD" }
+])
+db.createCollection("Patient")
+db.Patient.insertMany([
+  { "_id": 1, "name": "Alice", "age": 30, "category": "OPD" },
+  { "_id": 2, "name": "Bob", "age": 45, "category": "IPD" },
+  { "_id": 3, "name": "Charlie", "age": 25, "category": "OPD" },
+  { "_id": 4, "name": "David", "age": 50, "category": "IPD" },
+  { "_id": 5, "name": "Eva", "age": 35, "category": "OPD" }
+])
+Q1:a:
+db.Doctors.aggregate([
+  { $match: { opd_charges: { $gt: 100 } } }
+])
+b:
+db.Patient.aggregate([
+  { $project: { _id: 0, name: 1, category: 1 } }
+])
+c:
+db.Doctors.aggregate([
+  { $limit: 3 }
+])
+d:
+db.Doctors.aggregate([
+  { $match: { category: "IPD" } },
+  { $group: { _id: null, averageSalary: { $avg: "$salary" } } }
+])
+
+Q2:
+use Movie
+db.createCollection("Movies")
+
+db.Movies.insertMany([
+  { "_id": 1, "title": "The Shawshank Redemption", "release_year": 1994, "budget": 25000000 },
+  { "_id": 2, "title": "The Godfather", "release_year": 1972, "budget": 6000000 },
+  { "_id": 3, "title": "The Dark Knight", "release_year": 2008, "budget": 185000000 },
+  { "_id": 4, "title": "Pulp Fiction", "release_year": 1994, "budget": 8000000 },
+  { "_id": 5, "title": "Forrest Gump", "release_year": 1994, "budget": 55000000 }
+])
+db.createCollection("Actors")
+
+db.Actors.insertMany([
+  { "_id": 1, "name": "Tim Robbins", "movies": ["The Shawshank Redemption"] },
+  { "_id": 2, "name": "Marlon Brando", "movies": ["The Godfather"] },
+  { "_id": 3, "name": "Christian Bale", "movies": ["The Dark Knight"] },
+  { "_id": 4, "name": "Uma Thurman", "movies": ["Pulp Fiction"] },
+  { "_id": 5, "name": "Tom Hanks", "movies": ["Forrest Gump"] }
+])
+a:
+db.Movies.aggregate([
+  { $sort: { release_year: 1 } }
+])
+b:
+db.Actors.aggregate([
+  { $limit: 3 }
+])
+c:
+db.Movies.aggregate([
+  { $sort: { release_year: 1 } }  // Sorting is necessary to display based on release year
+])
+d:
+db.Movies.aggregate([
+  { $group: { _id: null, averageBudget: { $avg: "$budget" } } }
+])
+
+Q3
+use HotelManagement
+db.createCollection("Staff")
+
+db.Staff.insertMany([
+  { "_id": 1, "name": "John Doe", "position": "Manager", "salary": 30000 },
+  { "_id": 2, "name": "Jane Smith", "position": "Chef", "salary": 25000 },
+  { "_id": 3, "name": "Emily Johnson", "position": "Waiter", "salary": 15000 },
+  { "_id": 4, "name": "Michael Brown", "position": "Receptionist", "salary": 22000 },
+  { "_id": 5, "name": "William Davis", "position": "Cleaner", "salary": 18000 }
+])
+
+db.createCollection("Inventory")
+
+db.Inventory.insertMany([
+  { "_id": 1, "item": "Rice", "quantity": 100, "price_per_unit": 50 },
+  { "_id": 2, "item": "Sugar", "quantity": 50, "price_per_unit": 30 },
+  { "_id": 3, "item": "Milk", "quantity": 200, "price_per_unit": 20 },
+  { "_id": 4, "item": "Tea", "quantity": 30, "price_per_unit": 15 },
+  { "_id": 5, "item": "Coffee", "quantity": 10, "price_per_unit": 100 }
+])
+
+db.createCollection("Order")
+
+db.Order.insertMany([
+  { "_id": 1, "customer_id": 1, "items": ["Rice", "Sugar"], "total_bill": 800 },
+  { "_id": 2, "customer_id": 2, "items": ["Milk", "Tea"], "total_bill": 500 },
+  { "_id": 3, "customer_id": 3, "items": ["Coffee"], "total_bill": 1000 },
+  { "_id": 4, "customer_id": 4, "items": ["Rice", "Milk"], "total_bill": 700 },
+  { "_id": 5, "customer_id": 5, "items": ["Sugar", "Tea"], "total_bill": 600 }
+])
+
+db.createCollection("Customers")
+
+db.Customers.insertMany([
+  { "_id": 1, "name": "Mr. Patil", "phone_numbers": ["1234567890"] },
+  { "_id": 2, "name": "Mrs. Shah", "phone_numbers": ["2345678901"] },
+  { "_id": 3, "name": "Mr. Gupta", "phone_numbers": ["3456789012"] },
+  { "_id": 4, "name": "Ms. Reddy", "phone_numbers": ["4567890123"] },
+  { "_id": 5, "name": "Mr. Kumar", "phone_numbers": ["5678901234"] }
+])
+
+
+
