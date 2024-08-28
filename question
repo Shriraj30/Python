@@ -1,0 +1,42 @@
+			ADT Assignment 4: Aggregate Commands
+
+Q1. Consider the database of Hospital Management System with collections Doctors, Patient
+      Insert 5 records into each collection. Perform the following queries using aggregate 
+       commands. Find the doctors whose OPD charges are greater than 100.
+a.	Display Patient name and category of patients (IPD & OPD)
+b.	Display first three doctors from Doctors collection.
+c.	Find average salary of IPD doctors.
+
+
+Q2. Consider the Movie database with collections Movies, Actors
+       Insert 5 records into each collection and perform following queries using aggregate
+       commands:
+a.	Sort the movies based on release year.
+b.	Display first three actors from Actor collection.
+c.	Display all the movies based on release year.
+d.	Display the movies having average budget
+
+Q3. Consider Hotel Management System with collections Staff, Inventory, Order, Customers.
+        Insert 5 records into each collection. Perform the following queries using aggregate
+       commands:
+a.	Group and display all the items having minimum quantity from inventory.
+b.	Group and display all the orders having maximum total bill.
+c.	Add two phone numbers into phone number array field of customer “Mr. Patil”.
+d.	Find the staff having salary greater than 25000.
+
+Q4. Consider Vaccination System with collections Vaccines, Vaccinationcenters, Patients.
+        Insert 5 records into each collection. Perform the following queries using aggregate 
+       commands:
+a.	Group the vaccination centers location wise and display only center name and location.
+b.	Sort the customer details alphabetically and display first two records.
+c.	Display vaccines having average price.
+d.	Display vaccine name and price fields for vaccine having average price.
+
+
+Q5. Consider Cab Booking Database with collections Drivers, Passengers, Booking, 
+        Transactions. Insert 5 records into each collection. Perform the following queries using 
+         aggregate commands.
+a.	List the transactions with lowest price amount.
+b.	Sort the bookings based on dates.
+c.	Display first three booking details grouped date wise.
+d.	List transactions greater than 250 
