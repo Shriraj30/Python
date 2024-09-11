@@ -1,0 +1,52 @@
+﻿use fooddelievery
+db.createCollection("Customers")
+db.createCollection("Hotels")
+db.createCollection("Delieverypartner")
+db.Customers.insertMany([{cid:1,cname:"Aditya",location:"Pune"},{cid:2,cname:"Radhika",location:"Nashik"},{cid:3,cname:"Rohini",location:"Mumbai"},{cid:4,cname:"Suraj",location:"Parabhani"},{cid:5,cname:"Divya",location:"Jalgaon"}])
+db.Hotels.insertMany([{hid:1,hname:"Brahma Garden",hloc:"Sinhagad Road"},{hid:2,hname:"Sumadhu",hloc:"Bibwewadi"},{hid:3,hname:"Govind",hloc:"Vadgaon"},{hid:4,hname:"Shivam",hloc:"Dhayari"},{hid:5,hname:"Girija",hloc:"Sadashiv Peth"}])
+db.Delieverypartner.insertMany([{dpid:1,dpname:"Aakash",joining:"31/05/2024",location :"Sinhagad Road"},{dpid:2,dpname:"Saumitra",joining:"31/05/2024",location:"Bibwewadi"},{dpid:3,dpname:"Madhavi",joining:"22/04/2020",location:"Dhankawdi"},{dpid:4,dpname:"Gandhari",joining:"22/01/2021",location:"Dhankawdi"},{dpid:5,dpname:"Uma",joining:"12/09/2023",location:"Bibwewadi"}]);
+
+//1.	Delete any single record for delievery partner who left the service on 31/05/2024
+
+db.runCommand(
+  {
+    delete:"Delieverypartner",
+    deletes:[{
+      q:{joining:"31/05/2024"},
+      limit :1 
+    }]
+  })
+  
+//2.	Fetch the records for customers whose location is pune.
+
+db.runCommand(
+  {
+    find :"Customers",
+    filter:{location:"Pune"},
+    projection:{cname:1},
+    sort:{cname:1},
+  
+  
+  })
+
+// 3.	Modify hotel location of “Brahma Garden” hotel to Bibwewadi .
+
+db.runCommand(
+  {
+    findAndModify :"Hotels",
+    query:{hname:"Govind"},
+    update:{location:"Bibwewadi"},
+    new:1
+    
+  })
+  
+  db.Hotels.find({})
+  
+// 4.	Find delievery partners who are located in area “Dhankawdi”.
+
+db.runCommand(
+  {
+    find:"Delieverypartner",
+    filter:{location:"Dhankawdi"},
+  })
+
