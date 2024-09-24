@@ -1,0 +1,44 @@
+import re
+
+# Validate name
+while True:
+    name = input("Enter your Name: ")
+    if re.match(r"^[A-Za-z\s]+$", name):
+        print("Valid Name")
+        break
+    else:
+        print("Invalid Name. Alphabetic characters only.")
+
+# Aadhaar validation (12 digits, not starting with 0)
+while True:
+    aadhar = input("Enter Aadhaar number (12 digits): ")
+    if re.match(r"^[1-9][0-9]{11}$", aadhar):  # Starts with 1-9, followed by 11 digits
+        print("Valid Aadhaar number")
+        break
+    else:
+        print("Invalid Aadhaar number. It must be 12 digits and cannot start with 0.")
+
+# Validate PAN number (5 uppercase letters, 4 digits, 1 uppercase letter)
+while True:
+    pan = input("Enter PAN number (e.g., ABCDE1234F): ")
+    if re.match(r"^[A-Z]{5}[0-9]{4}[A-Z]{1}$", pan):
+        print("Valid PAN number")
+        break
+    else:
+        print("Invalid PAN number, please enter again.")
+
+# Validate phone number (starts with 7, 8, or 9 and has 10 digits)
+while True:
+    phone = input("Enter Phone number (10 digits): ")
+    if re.match(r"^[789][0-9]{9}$", phone):
+        print("Valid Phone number")
+        break
+    else:
+        print("Invalid Phone number, please enter again.")
+
+# Display the validated information
+print("\nThe entered details are:")
+print("Name:", name)
+print("Aadhaar Number:", aadhar)
+print("PAN Number:", pan)
+print("Phone Number:", phone)
