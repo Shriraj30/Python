@@ -1,0 +1,71 @@
+﻿use Library
+db.createCollection("Books")
+db.createCollection("Readers")
+db.Books.insertMany([{bid:1,bname:"ABC",author:"Mr.Pande"},{bid:2,bname:"DEF",author:"Mr. Pande"},{bid:3,bname:"IJK",author:"Mr.Shinde"},{bid:4,bname:"LMN",author:"Ms. Bhave"},{bid:5,bname:"OPQ",author:"Mr.Hedge"}])
+db.Readers.insertMany([{cid:1,cname:"Mr. Sathe"},{cid:2,cname:"Ms.Aditi"},{cid:3,cname:"Mrs.Doke"},{cid:4,cname:"Ms. Joshi"},{cid:5,cname:"Mrs.Gokhale"}])
+db.createView("Allotment2","Books",[
+  {
+    $lookup:
+    {
+      from:"Readers",
+      localField:"aid",
+      foreignField:"bid",
+      foerignField:"cid",
+      as:"All"
+    }
+    
+  },
+  {
+    $project:{
+      aid:1,
+      bid:1,
+      cid:1,
+      bname:1,
+      cname:1
+    }
+  }])
+  
+  db.Allotment2.insertOne({aid:1,bid:1,cid:1})
+  db.Allotment2.insertMany([{aid:2,bid:5,cid:1},{aid:3,bid:2,cid:2},{aid:4,bid:3,cid:3},{aid:5,bid:4,cid:5}])
+  db.Allotment2.find({})
+  
+  
+//Q1.Display the allotment of reader who is reading Book number 5.
+db.runCommand({
+  find:"Allotment2",
+  filter:{cid:1,bid:5}
+})
+
+//Q2. Update author name to “Mr. Pande” on the place of name “Mr. Mathew”.
+
+db.runCommand({
+  update:"Books",
+  updates:[
+  {q:{author:"Mr.Pande"},
+  u:{$set:{author:"Mr.Mathew"}}}
+]})
+
+db.Books.find({})
+
+// Delete the record of Reader no 2.
+
+db.runCommand({
+  delete:"Readers",
+  deletes:[
+    {
+      q:{cid:2},
+      limit:1
+    }]
+})
+
+db.Readers.find({})
+
+// Insert Two records into allotment table
+
+db.runCommand(
+  {
+    insert:"Allotment2",
+    documents:[{aid:6,bid:1,cid:1},{aid:7,bid:2,cid:3}]
+  })
+  
+  db.Allotment2.find({})
