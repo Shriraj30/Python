@@ -1,0 +1,37 @@
+use OTT
+
+db.createCollection("WebSeries")
+db.createCollection("Customers")
+db.createView("Sesssions","WebSeries",[
+  {
+    $lookup:
+    {
+      from : "Customers",
+      localField :"sid",
+      foreignField : "wno",
+      foreignField:"cid",
+      as:"sessionrec"
+    }
+    
+  }
+  ])
+  
+db.WebSeries.insertMany([{wno:1,wname:"Asur",seasoncnt:2,TRP:1000},{wno:2,wname:"Pet Puran",seasoncnt:3,TRP:500},{wno:3,wname:"Ye meri Family",seasoncnt:3,TRP:2000},{wno:4,wname:"Cubicles",seasoncnt:4,TRP:500},{wno:5,wname:"Barish",seasoncnt:4,TRP:800}])
+db.Customers.insertMany([{cid:1,subscribername:"Ashiwni",devicelimit:2},{cid:2,subscribername:"Manisha",devicelimit:3},{cid:3,subscribername:"Ashok",devicelimit:6},{cid:4,subscribername:"Chaitrali",devicelimit:7},{cid:5,subscribername:"Ashish",devicelimit:4}])
+db.sessionrec.insertMany([{sid:1,wno:1,cid:1},{sid:2,wno:1,cid:2},{sid:3,wno:2,cid:1},{sid:4,wno:2,cid:2},{sid:5,wno:3,cid:3}])
+
+// Find the Customers who have device limit greater than 5.
+
+db.Customers.find({$expr:{$gt:["$devicelimit",5]}})
+
+// Display web series with series count 3 or Float64Array
+
+db.WebSeries.find({$or:[{seasoncnt:3},{seasoncnt:4}]})
+
+// Display web sereid name and TRPs
+
+db.WebSeries.find({},{_id:0,wname:1,TRP:1})
+
+// Find rhe customers whose name start with A
+
+db.Customers.find({subscribername:{$regex:'/^A/'}},{subscribername:1})
