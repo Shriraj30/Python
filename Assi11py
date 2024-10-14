@@ -1,0 +1,64 @@
+# Custom Exception for Invalid Quantity
+class InvalidQuantityError(Exception):
+    pass
+
+# Custom Exception for Exceeding Maximum Order
+class ExceedingMaximumOrderError(Exception):
+    pass
+
+# Custom Exception for Invalid Product Code
+class InvalidProductCodeError(Exception):
+    pass
+
+# Product class
+class Product:
+    # Class variable: Dictionary to store product codes and their maximum quantities
+    max_order_levels = {
+        "P001": 100,
+        "P002": 200,
+        "P003": 150,
+        "P004": 300
+    }
+
+    def __init__(self, product_code, qty):
+        self.product_code = product_code
+        self.qty = qty
+
+    def validate(self):
+        # Check if product code is valid
+        if self.product_code not in Product.max_order_levels:
+            raise InvalidProductCodeError(f"Invalid Product Code: {self.product_code}")
+
+        # Check if quantity is negative
+        if self.qty < 0:
+            raise InvalidQuantityError("Quantity must not be negative")
+
+        # Check if quantity exceeds the maximum allowed level
+        max_qty = Product.max_order_levels[self.product_code]
+        if self.qty > max_qty:
+            raise ExceedingMaximumOrderError(f"Quantity exceeds maximum order level of {max_qty} for product {self.product_code}")
+
+# Example Usage
+try:
+    product_code = input("Enter product code: ")
+    qty = int(input("Enter quantity: "))
+
+    # Create Product object
+    product = Product(product_code, qty)
+    
+    # Validate the product details
+    product.validate()
+
+    print("Product details are valid!")
+
+except InvalidProductCodeError as e:
+    print(e)
+
+except InvalidQuantityError as e:
+    print(e)
+
+except ExceedingMaximumOrderError as e:
+    print(e)
+
+except ValueError:
+    print("Invalid input! Quantity must be an integer.")
