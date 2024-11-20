@@ -1,0 +1,254 @@
+import mysql.connector
+import configparser
+from mysql.connector import IntegrityError
+
+# Load configuration from config.ini
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+# Retrieve MySQL configuration without database
+db_config = {
+    'host': config['mysql']['host'],
+    'user': config['mysql']['user'],
+    'password': config['mysql']['password']
+}
+
+# Connect to MySQL without specifying the database
+db = mysql.connector.connect(**db_config)
+cursor = db.cursor()
+
+# Function to create the database if it doesn't exist
+def create_database(database_name):
+    cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
+    cursor.execute(f"USE {database_name}")
+
+# Specify the database name
+database_name = "db2"
+create_database(database_name)
+
+# Create tables with foreign key constraints
+def create_tables():
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Department (
+        dept_id INT PRIMARY KEY,
+        dept_name VARCHAR(50),
+        location VARCHAR(50)
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Employee (
+        empid INT PRIMARY KEY,
+        empname VARCHAR(50),
+        dept_id INT,
+        salary DECIMAL(10, 2),
+        FOREIGN KEY (dept_id) REFERENCES Department(dept_id) ON DELETE CASCADE
+    )
+    """)
+
+# Call table creation function
+create_tables()
+
+# Function for adding department
+def add_department():
+    dept_id = int(input("Enter Department ID: "))
+    dept_name = input("Enter Department Name: ")
+    location = input("Enter Location: ")
+    cursor.execute(
+        "INSERT INTO Department (dept_id, dept_name, location) VALUES (%s, %s, %s)",
+        (dept_id, dept_name, location)
+    )
+    db.commit()
+    print("Department added successfully!")
+
+# Function for adding employee
+def add_employee():
+    empid = int(input("Enter Employee ID: "))
+    empname = input("Enter Employee Name: ")
+    dept_name = input("Enter Department Name: ")
+    salary = float(input("Enter Salary: "))
+    
+    cursor.execute("SELECT dept_id FROM Department WHERE dept_name = %s", (dept_name,))
+    dept = cursor.fetchone()
+    
+    if dept:
+        dept_id = dept[0]
+        cursor.execute(
+            "INSERT INTO Employee (empid, empname, dept_id, salary) VALUES (%s, %s, %s, %s)",
+            (empid, empname, dept_id, salary)
+        )
+        db.commit()
+        print("Employee added successfully!")
+    else:
+        print("Department not found.")
+
+# Function for deleting department
+def delete_department():
+    dept_name = input("Enter Department Name to delete: ")
+    cursor.execute("DELETE FROM Employee WHERE dept_id = (SELECT dept_id FROM Department WHERE dept_name = %s)", (dept_name,))
+    cursor.execute("DELETE FROM Department WHERE dept_name = %s", (dept_name,))
+    db.commit()
+    print(f"Department '{dept_name}' and related employees deleted successfully!")
+
+# Function for deleting employee
+def delete_employee():
+    empid = int(input("Enter Employee ID to delete: "))
+    cursor.execute("DELETE FROM Employee WHERE empid = %s", (empid,))
+    db.commit()
+    print(f"Employee ID {empid} deleted successfully!")
+
+# Function for searching department by name
+def search_department():
+    dept_name = input("Enter Department Name to search: ")
+    cursor.execute("SELECT * FROM Department WHERE dept_name = %s", (dept_name,))
+    result = cursor.fetchone()
+    
+    if result:
+        print(f"Department Details: {result}")
+    else:
+        print(f"Department '{dept_name}' not found.")
+
+# Function for updating department
+def update_department():
+    dept_name = input("Enter Department Name to update: ")
+    new_name = input("Enter new Department Name: ")
+    new_location = input("Enter new Location: ")
+    cursor.execute(
+        "UPDATE Department SET dept_name = %s, location = %s WHERE dept_name = %s",
+        (new_name, new_location, dept_name)
+    )
+    db.commit()
+    print(f"Department '{dept_name}' updated successfully!")
+
+# Function for updating employee
+def update_employee():
+    empid = int(input("Enter Employee ID to update: "))
+    new_name = input("Enter new Employee Name: ")
+    new_salary = float(input("Enter new Salary: "))
+    cursor.execute(
+        "UPDATE Employee SET empname = %s, salary = %s WHERE empid = %s",
+        (new_name, new_salary, empid)
+    )
+    db.commit()
+    print(f"Employee ID {empid} updated successfully!")
+
+# Function for selecting data (view all employees and departments)
+def select_data():
+    print("Select what to view:")
+    print("1. View Departments")
+    print("2. View Employees")
+    choice = input("Enter your choice: ").strip()
+    
+    if choice == '1':
+        cursor.execute("SELECT * FROM Department")
+        departments = cursor.fetchall()
+        if departments:
+            for dept in departments:
+                print(dept)
+        else:
+            print("No departments found.")
+    elif choice == '2':
+        cursor.execute("SELECT * FROM Employee")
+        employees = cursor.fetchall()
+        if employees:
+            for emp in employees:
+                print(emp)
+        else:
+            print("No employees found.")
+    else:
+        print("Invalid choice.")
+
+# Function for generating reports
+def generate_reports():
+    print("Select a report type:")
+    print("1. Employees with Salary Above a Limit")
+    print("2. Employee Count in Each Department")
+    
+    report_type = input("Enter your choice (1/2): ").strip()
+    
+    if report_type == '1':
+        # Report 1: Employees with Salary Above a Limit
+        salary_limit = input("Enter the salary limit (e.g., 50000): ").strip()
+        
+        try:
+            salary_limit = float(salary_limit)
+            cursor.execute("SELECT empname, salary FROM Employee WHERE salary > %s", (salary_limit,))
+            results = cursor.fetchall()
+            
+            if results:
+                print(f"\nEmployees with salary above {salary_limit}:")
+                for row in results:
+                    print(f"Employee: {row[0]}, Salary: {row[1]}")
+            else:
+                print(f"No employees found with salary above {salary_limit}.")
+        except ValueError:
+            print("Invalid salary input. Please enter a valid number.")
+
+    elif report_type == '2':
+        # Report 2: Employee Count in Each Department
+        print("\nGenerating report for employee count in each department...")
+        cursor.execute("""
+        SELECT d.dept_name, COUNT(e.empid) AS num_employees
+        FROM Department d
+        LEFT JOIN Employee e ON d.dept_id = e.dept_id
+        GROUP BY d.dept_name
+        """)
+        results = cursor.fetchall()
+
+        if results:
+            print("\nEmployee count in each department:")
+            for row in results:
+                print(f"Department: {row[0]}, Number of Employees: {row[1]}")
+        else:
+            print("No departments found.")
+    
+    else:
+        print("Invalid input. Please choose either 1 or 2.")
+
+# Menu-driven interface
+def menu():
+    while True:
+        print("\nMenu:")
+        print("1. Add Department")
+        print("2. Add Employee")
+        print("3. Delete Department")
+        print("4. Delete Employee")
+        print("5. Search Department")
+        print("6. Update Department")
+        print("7. Update Employee")
+        print("8. View Data")
+        print("9. Generate Reports")
+        print("10. Exit")
+        
+        choice = input("Enter your choice: ").strip()
+        
+        if choice == '1':
+            add_department()
+        elif choice == '2':
+            add_employee()
+        elif choice == '3':
+            delete_department()
+        elif choice == '4':
+            delete_employee()
+        elif choice == '5':
+            search_department()
+        elif choice == '6':
+            update_department()
+        elif choice == '7':
+            update_employee()
+        elif choice == '8':
+            select_data()
+        elif choice == '9':
+            generate_reports()
+        elif choice == '10':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+# Run the menu
+menu()
+
+# Close the connection
+cursor.close()
+db.close()
