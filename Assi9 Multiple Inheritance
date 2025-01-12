@@ -1,39 +1,32 @@
-# Class to represent the Student
+import re
 class Student:
     def __init__(self):
         self.RegNo = None
         self.Name = None
 
-    # Setter for registration number
     def setRegNo(self, reg_no):
         self.RegNo = reg_no
 
-    # Setter for name
     def setName(self, name):
         self.Name = name
 
-    # Getter for registration number
     def getRegNo(self):
         return self.RegNo
 
-    # Getter for name
     def getName(self):
         return self.Name
 
-# Class to represent the Exam details
 class Exam:
     def __init__(self):
         self.Examno = None
         self.Pattern = None
         self.Semister = None
 
-    # Setter for exam details
     def setData(self, exam_no, pattern, semister):
         self.Examno = exam_no
         self.Pattern = pattern
         self.Semister = semister
 
-    # Getter for exam details
     def getData(self):
         return {
             "Examno": self.Examno,
@@ -41,7 +34,6 @@ class Exam:
             "Semister": self.Semister
         }
 
-# Class to represent the Result
 class Result(Student, Exam):
     def __init__(self):
         super().__init__()
@@ -49,13 +41,11 @@ class Result(Student, Exam):
         self.Maths_marks = 0
         self.Chem_marks = 0
 
-    # Setter for marks
     def setMarks(self, phy, maths, chem):
         self.Phy_marks = phy
         self.Maths_marks = maths
         self.Chem_marks = chem
 
-    # Getter for marks
     def getMarks(self):
         return {
             "Physics": self.Phy_marks,
@@ -63,7 +53,7 @@ class Result(Student, Exam):
             "Chemistry": self.Chem_marks
         }
 
-    # Calculate the result grade based on marks
+
     def calResultGrade(self):
         total = self.Phy_marks + self.Maths_marks + self.Chem_marks
         avg = total / 3
@@ -79,11 +69,25 @@ class Result(Student, Exam):
         else:
             return "Fail"
 
-# Function to take user input and return result details
 def get_student_details():
-    # Taking input from the user
-    reg_no = input("Enter the registration number: ")
-    name = input("Enter the student name: ")
+    student = Result()
+
+    while True:
+        reg_no = input("Enter the registration number (numbers only): ")
+        if re.match(r'^\d+$', reg_no):  
+            student.reg_no = reg_no
+            break
+        else:
+            print("Invalid input. Please enter numbers only.")
+
+    while True:
+        name = input("Enter the student name (letters and spaces only): ")
+        if re.match(r'^[A-Za-z\s]+$', name):  
+            student.name = name
+            break
+        else:
+            print("Invalid input. Please enter letters and spaces only.")
+
     exam_no = input("Enter the exam number: ")
     pattern = input("Enter the exam pattern: ")
     semister = input("Enter the semester: ")
@@ -94,15 +98,12 @@ def get_student_details():
 
     student = Result()
 
-    # Setting student and exam details
     student.setRegNo(reg_no)
     student.setName(name)
     student.setData(exam_no, pattern, semister)
 
-    # Setting marks
     student.setMarks(phy_marks, maths_marks, chem_marks)
 
-    # Returning student details and grade
     return {
         "Student Name": student.getName(),
         "Reg No": student.getRegNo(),
@@ -111,9 +112,7 @@ def get_student_details():
         "Grade": student.calResultGrade()
     }
 
-# Call the function and print the result
 student_info = get_student_details()
 
-# Print the result
 for key, value in student_info.items():
     print(f"{key}: {value}")
