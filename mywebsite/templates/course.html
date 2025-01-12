@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        .pass_class { color: #72BF78; }
+        .fail_class { color: red; }
+    </style>
+</head>
+<body>
+    {% for n in healthy_food %}
+        <div>
+            <span style="color:green; margin-right:5px;">{{ forloop.counter }}</span>{{ n }}
+        </div>
+    {% endfor %}
+    
+    <h3>List of courses</h3>
+    <ul>
+        <li>C Programming</li>
+        <li>C++ Object Oriented Programming</li>
+        <li>RDBMS</li>
+    </ul>
+
+    <h3>Directory listing</h3>
+    <table>
+        <tr>
+            <th>Course Id</th><th>Course Name</th>
+        </tr>
+        {% for key, value in course.items %}
+        <tr>
+            <td>{{ key }}</td> <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Marks listing</h3>
+    <table>
+        <tr>
+            <th>Name</th><th>Percentage</th>
+        </tr>
+        {% for key, value in marks.items %}
+        <tr>
+            <td>{{ key }}</td>
+            <td class="{% if value < 40 %} fail_class {% else %} pass_class {% endif %}">{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

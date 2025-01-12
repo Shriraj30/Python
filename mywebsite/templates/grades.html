@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>
+            Students grades
+        </title>
+        <style>
+            .pass{color:green;}
+            .fail{color:red}
+            .Distinction{color:blue;}
+        </style>
+    </head>
+    <body>
+        <h1>Student Grade</h1>
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+            </tr>
+            </thead>
+            <tbody>
+                {%for student in students%}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.percentage }}</td>
+                    <td>
+                        {% if student.percentage >= 75 %}
+                        <span class="distinction">Distinction</span>
+                        {% elif student.percentage >= 40 %}
+                        <span class="pass">Pass</span>
+                        {% else %}
+                        <span class="fail">Fail</span>
+                        {% endif %}
+                    </td>
+    
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </body>    
+</html>
