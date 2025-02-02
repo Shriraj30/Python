@@ -1,0 +1,45 @@
+#include <stdio.h>       // For input-output functions like printf
+#include <fcntl.h>       // For file control operations like open and creat
+#include <stdlib.h>      // For exit function
+#include <sys/types.h>   // For data types used in system calls
+#include <unistd.h>      // For read and write system calls
+
+char buffer[2048];       // Buffer to store data temporarily during file copy
+int version = 1;         // Program version (not used in functionality)
+
+int main(int argc, char *argv[]) {
+    void copy(int, int); // Function declaration for the copy function
+    int fdold, fdnew;    // File descriptors for source and destination files
+
+    // Check if the number of arguments is correct
+    if (argc != 3) {
+        printf("Need 2 arguments for copy program\n");
+        exit(1); // Exit with error if arguments are incorrect
+    }
+
+    // Open the source file in read-only mode
+    fdold = open(argv[1], O_RDONLY);
+    if (fdold == -1) {
+        printf("Cannot open file: %s\n", argv[1]);
+        exit(1); // Exit with error if source file cannot be opened
+    }
+
+    // Create the destination file with read/write permissions
+    fdnew = creat(argv[2], 0666);
+    if (fdnew == -1) {
+        printf("Cannot create file: %s\n", argv[2]);
+        exit(1); // Exit with error if destination file cannot be created
+    }
+
+    // Call the copy function to copy data from source to destination
+    copy(fdold, fdnew);
+    return 0; // Exit successfully
+}
+
+void copy(int old, int new) {
+    int count; // Number of bytes read
+    // Read from the source file and write to the destination file
+    while ((count = read(old, buffer, sizeof(buffer))) > 0) {
+        write(new, buffer, count);
+    }
+}
